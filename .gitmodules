@@ -1,0 +1,24 @@
+[submodule "dagster"]
+	path = dagster
+	url = /Users/trailo/dev/dagster-examples/dagster
+[submodule "dagster-open-platform"]
+	path = dagster-open-platform
+	url = /Users/trailo/dev/dagster-examples/dagster-open-platform
+[submodule "dagster_deployment_docker"]
+	path = dagster_deployment_docker
+	url = /Users/trailo/dev/dagster-examples/dagster_deployment_docker
+[submodule "data-aware-orchestration"]
+	path = data-aware-orchestration
+	url = /Users/trailo/dev/dagster-examples/data-aware-orchestration
+[submodule "mdsfest-opensource-mds"]
+	path = mdsfest-opensource-mds
+	url = /Users/trailo/dev/dagster-examples/mdsfest-opensource-mds
+[submodule "portable-data-stack-dagster"]
+	path = portable-data-stack-dagster
+	url = /Users/trailo/dev/dagster-examples/portable-data-stack-dagster
+[submodule "practical-data-engineering"]
+	path = practical-data-engineering
+	url = /Users/trailo/dev/dagster-examples/practical-data-engineering
+[submodule "spotify-ads-dagster"]
+	path = spotify-ads-dagster
+	url = /Users/trailo/dev/dagster-examples/spotify-ads-dagster
