@@ -1,0 +1,18 @@
+[submodule "dagster-open-platform"]
+	path = dagster-open-platform
+	url = git@github.com:dagster-io/dagster-open-platform.git
+[submodule "data-aware-orchestration"]
+	path = data-aware-orchestration
+	url = git@github.com:jonathanneo/data-aware-orchestration.git
+[submodule "mdsfest-opensource-mds"]
+	path = mdsfest-opensource-mds
+	url = git@github.com:dagster-io/mdsfest-opensource-mds.git
+[submodule "portable-data-stack-dagster"]
+	path = portable-data-stack-dagster
+	url = git@github.com:cnstlungu/portable-data-stack-dagster.git
+[submodule "practical-data-engineering"]
+	path = practical-data-engineering
+	url = git@github.com:sspaeti-com/practical-data-engineering.git
+[submodule "dagster-project-example"]
+	path = dagster-project-example
+	url = git@github.com:AntonFriberg/dagster-project-example.git
