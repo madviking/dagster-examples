@@ -1,0 +1,41 @@
+FROM python:3.10-slim
+
+# Checkout and install dagster libraries needed to run the gRPC server
+# exposing your repository to dagster-webserver and dagster-daemon, and to load the DagsterInstance
+# note that this dockerfile is also used by the temporary runners
+
+# Install curl
+RUN apt-get update && apt-get install -y curl pkg-config default-libmysqlclient-dev build-essential dnsutils gawk sed
+
+COPY requirements.txt /opt/dagster/app/requirements.txt
+COPY src/ep/requirements.txt /opt/dagster/app/src/ep/requirements.txt
+
+##### EP INSTALL ####
+# Install the ep dependencies
+RUN touch /opt/dagster/app/requirements-temp.txt
+RUN cat /opt/dagster/app/src/ep/requirements.txt > /opt/dagster/app/requirements-temp.txt
+RUN cat /opt/dagster/app/requirements.txt >> /opt/dagster/app/requirements-temp.txt
+
+RUN cat /opt/dagster/app/requirements-temp.txt
+
+WORKDIR /opt/dagster/app
+
+RUN pip install -r /opt/dagster/app/requirements-temp.txt
+RUN rm /opt/dagster/app/requirements-temp.txt
+
+COPY google.json /opt/dagster/app/google.json
+ENV GOOGLE_APPLICATION_CREDENTIALS="/opt/dagster/app/google.json"
+
+# Set $DAGSTER_HOME and copy dagster instance and workspace YAML there
+ENV DAGSTER_HOME=/opt/dagster/dagster_home/
+#ENV PYTHONPATH="/opt/dagster/app/src:/opt/dagster/app/src/dagster:/opt/dagster/app/src/ep:/usr/local/lib/python3.10/site-packages"
+
+COPY repo.py /opt/dagster/app
+
+# Run dagster gRPC server on port 4000
+
+EXPOSE 4000
+
+# CMD allows this to be overridden from run launchers or executors that want
+# to run other commands against your repository
+CMD ["dagster", "code-server", "start", "-h", "0.0.0.0", "-p", "4000", "-f", "repo.py"]

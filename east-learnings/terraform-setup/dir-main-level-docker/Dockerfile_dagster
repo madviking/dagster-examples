@@ -1,0 +1,23 @@
+# Dagster libraries to run both dagster-webserver and the dagster-daemon. Does not
+# need to have access to any pipeline code.
+
+FROM python:3.10-slim
+#ARG BASE_PATH
+
+RUN apt-get update && apt-get install -y curl pkg-config default-libmysqlclient-dev build-essential dnsutils gawk sed
+RUN pip install dagster dagster-graphql dagit dagster-webserver dagster-postgres dagster-docker aio-pika pycountry
+
+# Set $DAGSTER_HOME and copy dagster instance and workspace YAML there
+ENV DAGSTER_HOME=/opt/dagster/dagster_home/
+
+RUN mkdir -p $DAGSTER_HOME
+
+COPY dagster.yaml workspace.yaml $DAGSTER_HOME
+
+# not sure why, but didn't get this to work
+# RUN sed -i 's|{{BASE_PATH}}|$BASE_PATH|g' $DAGSTER_HOME/dagster.yaml
+
+COPY google.json $DAGSTER_HOME/google.json
+ENV GOOGLE_APPLICATION_CREDENTIALS="/opt/dagster/app/google.json"
+
+WORKDIR $DAGSTER_HOME

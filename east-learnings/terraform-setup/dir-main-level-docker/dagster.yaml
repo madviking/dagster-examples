@@ -1,0 +1,79 @@
+scheduler:
+  module: dagster.core.scheduler
+  class: DagsterDaemonScheduler
+
+run_coordinator:
+  module: dagster.core.run_coordinator
+  class: QueuedRunCoordinator
+
+#
+# NOTE! Dagster doesn't actually support env substitution in the config file,
+# Input env_vars and local path manually. Sorry, we couldn't get it to work dynamically in any way.
+#
+
+run_launcher:
+  module: dagster_docker
+  class: DockerRunLauncher
+  config:
+    image: dagster_user_code_image
+    env_vars:
+      - APP_ENV
+      - APP_ENV_OWNER
+      - LIST_OF_ALL_SECRETS_GO_HERE
+    network: east_local
+    container_kwargs:
+      entrypoint: [ "/bin/bash", "/east/dagster/start-container.sh" ]
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - /tmp/io_manager_storage:/tmp/io_manager_storage
+        - /{your_local_path}/dagster:/opt/dagster/app
+        - /{your_local_path}:/project
+        - /{your_local_path}:/opt/dagster/storage
+
+run_storage:
+  module: dagster_postgres.run_storage
+  class: PostgresRunStorage
+  config:
+    postgres_db:
+      hostname: dagster_postgresql
+      username:
+        env: DAGSTER_POSTGRES_USER
+      password:
+        env: DAGSTER_POSTGRES_PASSWORD
+      db_name:
+        env: DAGSTER_POSTGRES_DB
+      port: 5432
+
+schedule_storage:
+  module: dagster_postgres.schedule_storage
+  class: PostgresScheduleStorage
+  config:
+    postgres_db:
+      hostname: dagster_postgresql
+      username:
+        env: DAGSTER_POSTGRES_USER
+      password:
+        env: DAGSTER_POSTGRES_PASSWORD
+      db_name:
+        env: DAGSTER_POSTGRES_DB
+      port: 5432
+
+event_log_storage:
+  module: dagster_postgres.event_log
+  class: PostgresEventLogStorage
+  config:
+    postgres_db:
+      hostname: dagster_postgresql
+      username:
+        env: DAGSTER_POSTGRES_USER
+      password:
+        env: DAGSTER_POSTGRES_PASSWORD
+      db_name:
+        env: DAGSTER_POSTGRES_DB
+      port: 5432
+
+local_artifact_storage:
+  module: dagster.core.storage.root
+  class: LocalArtifactStorage
+  config:
+    base_dir: /opt/dagster/storage
